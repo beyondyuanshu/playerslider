@@ -17,7 +17,8 @@ FormPlayerSlider::FormPlayerSlider(QWidget *parent) :
 
     connect(ui->pushButton, SIGNAL(clicked()), SLOT(slot_btnClicked()));
 
-    connect(ui->slider, SIGNAL(adjustScrollBar()), SLOT(slot_adjustVerticalScrollBarValue()));
+    connect(ui->scrollArea->horizontalScrollBar(), SIGNAL(rangeChanged(int, int)),
+            SLOT(slot_adjustVerticalScrollBarValue()));
     connect(ui->slider, SIGNAL(adjustScrollBar(int)), SLOT(slot_adjustVerticalScrollBarValue(int)));
 
     ui->slider->setScrollArea(ui->scrollArea);
@@ -53,6 +54,8 @@ void FormPlayerSlider::slot_accuracyChanged(int state)
 void FormPlayerSlider::slot_btnClicked()
 {
     qDebug() << ui->scrollArea->horizontalScrollBar()->maximum()
+             << ui->slider->width()
+             << ui->scrollArea->horizontalScrollBar()->value()
              << ui->scrollArea->horizontalScrollBar()->pageStep()
              << ui->slider->width()
              << ui->slider->getCurrentPosX();
@@ -61,11 +64,9 @@ void FormPlayerSlider::slot_btnClicked()
 
 void FormPlayerSlider::slot_adjustVerticalScrollBarValue()
 {
-    QEventLoop eventloop;
-    QTimer::singleShot(20, &eventloop, SLOT(quit()));
-    eventloop.exec();
     int pageStep = ui->scrollArea->horizontalScrollBar()->pageStep();
     ui->scrollArea->horizontalScrollBar()->setValue(int(ui->slider->getCurrentPosX()) - pageStep / 2);
+    slot_btnClicked();
 }
 
 void FormPlayerSlider::slot_adjustVerticalScrollBarValue(int changedValue)

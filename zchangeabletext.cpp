@@ -59,7 +59,7 @@ void ZChangeableText::paintEvent(QPaintEvent *event)
     painter.restore();
 
     paintText("Hammer", true);
-    paintText("Yang chenglin", false);
+    paintText("Hello Qt", false);
 }
 
 void ZChangeableText::timerEvent(QTimerEvent *event)

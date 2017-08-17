@@ -37,16 +37,12 @@ void ZPlayerSlider::setAccuracyType(const ZPlayerSlider::AccuracyType &type)
 {
     m_accuracyType = type;
     update();
-
-    emit adjustScrollBar();
 }
 
 void ZPlayerSlider::setOriginWidth(int w)
 {
     m_originWidth = w;
     update();
-
-    emit adjustScrollBar();
 }
 
 void ZPlayerSlider::paintEvent(QPaintEvent *event)
@@ -139,9 +135,10 @@ void ZPlayerSlider::paintEvent(QPaintEvent *event)
         painter.setPen(QPen("gray"));
         painter.drawLine(x1, y1, x2, y2);
 
-        if (((i % steps) == 0)
+        if (/*((i % steps) == 0)
                 && ((i / steps) > 0)
-                && ((i / steps) < 24)) {
+                && ((i / steps) < 24)*/
+            i % 10 == 0) {
             int x, y;
             x = m_margin + m_grooveSpacing * i + 1 - 25;
             y = height() / 2 + 20 + 10;
@@ -153,7 +150,8 @@ void ZPlayerSlider::paintEvent(QPaintEvent *event)
             font.setPixelSize(10);
             painter.setFont(font);
             painter.setPen(QPen("dimgray"));
-            painter.drawText(rect, Qt::AlignCenter, time.toString("hh:00"));
+            painter.drawText(rect,
+                             Qt::AlignCenter, /*time.toString("hh:00")*/QDateTime::currentDateTime().toString("hh:mm:ss"));
         }
     }
     painter.restore();
@@ -290,7 +288,7 @@ int ZPlayerSlider::getSteps(const AccuracyType &accuracyType)
         steps = 10;
         break;
     case Second:
-        steps = 50;
+        steps = 3600;
         break;
     case Hour:
     default:
